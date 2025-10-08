@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Calculator</title>
+</head>
+<body>
+    <h1>Investment Calculator</h1>
+    
+    <form id="calculatorForm">
+        <div>
+            <label for="investmentType">Investment Type:</label>
+            <select id="investmentType" name="investmentType" required>
+                <option value="tqqq-investment">TQQQ Investment</option>
+                <option value="upro-investment">UPRO Investment</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="assetPrice">Asset Price (TQQQ/UPRO):</label>
+            <input type="text" id="assetPrice" name="assetPrice" required>
+        </div>
+
+        <div>
+            <label for="cashBalance">Cash Balance:</label>
+            <input type="text" id="cashBalance" name="cashBalance" required>
+        </div>
+
+        <div>
+            <label for="underlyingAssetPrice">Underlying Asset Price (QQQ/VOO):</label>
+            <input type="text" id="underlyingAssetPrice" name="underlyingAssetPrice" required>
+        </div>
+
+        <div>
+            <label for="underlyingAsset200MaPrice">Underlying Asset 200MA Price:</label>
+            <input type="text" id="underlyingAsset200MaPrice" name="underlyingAsset200MaPrice" required>
+        </div>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

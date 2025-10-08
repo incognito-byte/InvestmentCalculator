@@ -1,0 +1,34 @@
+{
+  "name": "investment-calculator",
+  "version": "1.0.0",
+  "description": "Investment calculator with CLI and web interface",
+  "main": "dist/index.js",
+  "bin": {
+    "investment-calc": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:web": "tsc -p tsconfig.web.json && cp src/web/index.html dist/web/",
+    "start": "node dist/cli.js",
+    "dev": "ts-node src/cli.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "investment",
+    "calculator",
+    "cli",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "@types/prompts": "^2.4.9"
+  }
+}
+

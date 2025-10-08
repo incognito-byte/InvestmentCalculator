@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ES2020",
+    "module": "None",
     "lib": ["ES2020", "DOM"],
     "outDir": "./dist/web",
     "rootDir": "./src/web",

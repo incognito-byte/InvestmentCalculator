@@ -1,19 +1,11 @@
-type CalculationType = "tqqq-investment" | "upro-investment";
-
-interface CalculationInput {
-  type: CalculationType;
+// Inline calculator logic to avoid module loading issues with file:// protocol
+function calculate(input: {
+  type: string;
   cashBalance: number;
   assetPrice: number;
   underlyingAssetPrice: number;
   underlyingAsset200MaPrice: number;
-}
-
-interface CalculationResult {
-  type: CalculationType;
-  finalInvestment: number;
-}
-
-function calculate(input: CalculationInput): CalculationResult {
+}) {
   const portfolioScaleFactor = Math.max(
     1,
     Math.floor(input.cashBalance / 1_500)
@@ -40,11 +32,15 @@ function calculate(input: CalculationInput): CalculationResult {
 const form = document.getElementById("calculatorForm") as HTMLFormElement;
 const resultDiv = document.getElementById("result") as HTMLDivElement;
 
+console.log("Script loaded successfully");
+
 form.addEventListener("submit", (e: Event) => {
   e.preventDefault();
+  e.stopPropagation();
+  console.log("Form submitted, event prevented");
 
   const formData = new FormData(form);
-  const investmentType = formData.get("investmentType") as CalculationType;
+  const investmentType = formData.get("investmentType") as string;
   const assetPrice = parseFloat(formData.get("assetPrice") as string);
   const cashBalance = parseFloat(formData.get("cashBalance") as string);
   const underlyingAssetPrice = parseFloat(
@@ -62,7 +58,7 @@ form.addEventListener("submit", (e: Event) => {
     isNaN(underlyingAsset200MaPrice)
   ) {
     resultDiv.innerHTML = "<p>Error: Please enter valid numbers</p>";
-    return;
+    return false;
   }
 
   if (
@@ -71,12 +67,11 @@ form.addEventListener("submit", (e: Event) => {
     underlyingAssetPrice <= 0 ||
     underlyingAsset200MaPrice <= 0
   ) {
-    resultDiv.innerHTML =
-      "<p>Error: All values must be greater than zero</p>";
-    return;
+    resultDiv.innerHTML = "<p>Error: All values must be greater than zero</p>";
+    return false;
   }
 
-  const input: CalculationInput = {
+  const input = {
     type: investmentType,
     assetPrice,
     cashBalance,
@@ -84,7 +79,11 @@ form.addEventListener("submit", (e: Event) => {
     underlyingAsset200MaPrice,
   };
 
+  console.log("Input:", input);
+
   const result = calculate(input);
+
+  console.log("Result:", result);
 
   // Calculate additional details
   const portfolioScaleFactor = Math.max(1, Math.floor(cashBalance / 1_500));
@@ -108,4 +107,8 @@ form.addEventListener("submit", (e: Event) => {
         : "Below 200MA (increasing investment)"
     }</p>
   `;
+
+  console.log("Results displayed successfully");
+
+  return false;
 });

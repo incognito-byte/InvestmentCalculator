@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:web": "tsc -p tsconfig.web.json && cp src/web/index.html dist/web/",
+    "build:web": "tsc -p tsconfig.web.json && cp src/web/index.html dist/web/ && rm -rf dist/web/web dist/web/calculator.js dist/web/index.js",
     "start": "node dist/cli.js",
     "dev": "ts-node src/cli.ts",
     "prepare": "npm run build"
@@ -31,4 +31,3 @@
     "@types/prompts": "^2.4.9"
   }
 }
-

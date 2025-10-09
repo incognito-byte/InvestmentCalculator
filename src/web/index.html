@@ -10,45 +10,40 @@
 
     <form id="calculatorForm">
       <div>
-        <label for="investmentType">Investment Type:</label>
-        <select id="investmentType" name="investmentType" required>
-          <option value="tqqq-investment">TQQQ Investment</option>
-          <option value="upro-investment">UPRO Investment</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="assetPrice">Asset Price (TQQQ/UPRO):</label>
-        <input type="text" id="assetPrice" name="assetPrice" required />
-      </div>
-
-      <div>
         <label for="cashBalance">Cash Balance:</label>
         <input type="text" id="cashBalance" name="cashBalance" required />
       </div>
 
+      <h2>TQQQ Section</h2>
       <div>
-        <label for="underlyingAssetPrice"
-          >Underlying Asset Price (QQQ/VOO):</label
-        >
-        <input
-          type="text"
-          id="underlyingAssetPrice"
-          name="underlyingAssetPrice"
-          required
-        />
+        <label for="tqqqPrice">TQQQ Price:</label>
+        <input type="text" id="tqqqPrice" name="tqqqPrice" required />
       </div>
 
       <div>
-        <label for="underlyingAsset200MaPrice"
-          >Underlying Asset 200MA Price:</label
-        >
-        <input
-          type="text"
-          id="underlyingAsset200MaPrice"
-          name="underlyingAsset200MaPrice"
-          required
-        />
+        <label for="qqqPrice">QQQ Price:</label>
+        <input type="text" id="qqqPrice" name="qqqPrice" required />
+      </div>
+
+      <div>
+        <label for="qqq200Ma">QQQ 200 MA:</label>
+        <input type="text" id="qqq200Ma" name="qqq200Ma" required />
+      </div>
+
+      <h2>UPRO Section</h2>
+      <div>
+        <label for="uproPrice">UPRO Price:</label>
+        <input type="text" id="uproPrice" name="uproPrice" required />
+      </div>
+
+      <div>
+        <label for="vooPrice">VOO Price:</label>
+        <input type="text" id="vooPrice" name="vooPrice" required />
+      </div>
+
+      <div>
+        <label for="voo200Ma">VOO 200 MA:</label>
+        <input type="text" id="voo200Ma" name="voo200Ma" required />
       </div>
 
       <button type="submit">Calculate</button>

@@ -26,6 +26,9 @@ function calculate(input: {
   return {
     type: input.type,
     finalInvestment,
+    portfolioScaleFactor,
+    distance,
+    distanceScaleFactor,
   };
 }
 
@@ -40,69 +43,80 @@ form.addEventListener("submit", (e: Event) => {
   console.log("Form submitted, event prevented");
 
   const formData = new FormData(form);
-  const investmentType = formData.get("investmentType") as string;
-  const assetPrice = parseFloat(formData.get("assetPrice") as string);
   const cashBalance = parseFloat(formData.get("cashBalance") as string);
-  const underlyingAssetPrice = parseFloat(
-    formData.get("underlyingAssetPrice") as string
-  );
-  const underlyingAsset200MaPrice = parseFloat(
-    formData.get("underlyingAsset200MaPrice") as string
-  );
+  
+  // TQQQ inputs
+  const tqqqPrice = parseFloat(formData.get("tqqqPrice") as string);
+  const qqqPrice = parseFloat(formData.get("qqqPrice") as string);
+  const qqq200Ma = parseFloat(formData.get("qqq200Ma") as string);
+  
+  // UPRO inputs
+  const uproPrice = parseFloat(formData.get("uproPrice") as string);
+  const vooPrice = parseFloat(formData.get("vooPrice") as string);
+  const voo200Ma = parseFloat(formData.get("voo200Ma") as string);
 
   // Validate inputs
-  if (
-    isNaN(assetPrice) ||
-    isNaN(cashBalance) ||
-    isNaN(underlyingAssetPrice) ||
-    isNaN(underlyingAsset200MaPrice)
-  ) {
-    resultDiv.innerHTML = "<p>Error: Please enter valid numbers</p>";
+  const allInputs = [cashBalance, tqqqPrice, qqqPrice, qqq200Ma, uproPrice, vooPrice, voo200Ma];
+  
+  if (allInputs.some(val => isNaN(val))) {
+    resultDiv.innerHTML = "<p>Error: Please enter valid numbers in all fields</p>";
     return false;
   }
 
-  if (
-    assetPrice <= 0 ||
-    cashBalance <= 0 ||
-    underlyingAssetPrice <= 0 ||
-    underlyingAsset200MaPrice <= 0
-  ) {
+  if (allInputs.some(val => val <= 0)) {
     resultDiv.innerHTML = "<p>Error: All values must be greater than zero</p>";
     return false;
   }
 
-  const input = {
-    type: investmentType,
-    assetPrice,
+  // Calculate TQQQ
+  const tqqqInput = {
+    type: "tqqq-investment",
+    assetPrice: tqqqPrice,
     cashBalance,
-    underlyingAssetPrice,
-    underlyingAsset200MaPrice,
+    underlyingAssetPrice: qqqPrice,
+    underlyingAsset200MaPrice: qqq200Ma,
   };
 
-  console.log("Input:", input);
+  // Calculate UPRO
+  const uproInput = {
+    type: "upro-investment",
+    assetPrice: uproPrice,
+    cashBalance,
+    underlyingAssetPrice: vooPrice,
+    underlyingAsset200MaPrice: voo200Ma,
+  };
 
-  const result = calculate(input);
+  console.log("TQQQ Input:", tqqqInput);
+  console.log("UPRO Input:", uproInput);
 
-  console.log("Result:", result);
+  const tqqqResult = calculate(tqqqInput);
+  const uproResult = calculate(uproInput);
 
-  // Calculate additional details
-  const portfolioScaleFactor = Math.max(1, Math.floor(cashBalance / 1_500));
-  const distance =
-    (underlyingAssetPrice - underlyingAsset200MaPrice) /
-    underlyingAsset200MaPrice;
-  const distancePercent = (distance * 100).toFixed(2);
+  console.log("TQQQ Result:", tqqqResult);
+  console.log("UPRO Result:", uproResult);
+
+  const tqqqDistancePercent = (tqqqResult.distance * 100).toFixed(2);
+  const uproDistancePercent = (uproResult.distance * 100).toFixed(2);
 
   resultDiv.innerHTML = `
     <h2>Results</h2>
-    <p><strong>Investment Type:</strong> ${result.type}</p>
-    <p><strong>Recommended Investment Amount:</strong> $${result.finalInvestment.toFixed(
-      2
-    )}</p>
-    <h3>Details</h3>
-    <p><strong>Portfolio Scale Factor:</strong> ${portfolioScaleFactor}x</p>
-    <p><strong>Distance from 200MA:</strong> ${distancePercent}%</p>
+    <p><strong>Cash Balance:</strong> $${cashBalance.toFixed(2)}</p>
+    <p><strong>Portfolio Scale Factor:</strong> ${tqqqResult.portfolioScaleFactor}x</p>
+    
+    <h3>TQQQ Investment</h3>
+    <p><strong>Recommended Investment Amount:</strong> $${tqqqResult.finalInvestment.toFixed(2)}</p>
+    <p><strong>QQQ Distance from 200MA:</strong> ${tqqqDistancePercent}%</p>
     <p><strong>Market Position:</strong> ${
-      distance > 0
+      tqqqResult.distance > 0
+        ? "Above 200MA (reducing investment)"
+        : "Below 200MA (increasing investment)"
+    }</p>
+    
+    <h3>UPRO Investment</h3>
+    <p><strong>Recommended Investment Amount:</strong> $${uproResult.finalInvestment.toFixed(2)}</p>
+    <p><strong>VOO Distance from 200MA:</strong> ${uproDistancePercent}%</p>
+    <p><strong>Market Position:</strong> ${
+      uproResult.distance > 0
         ? "Above 200MA (reducing investment)"
         : "Below 200MA (increasing investment)"
     }</p>

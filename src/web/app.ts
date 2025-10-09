@@ -44,26 +44,35 @@ form.addEventListener("submit", (e: Event) => {
 
   const formData = new FormData(form);
   const cashBalance = parseFloat(formData.get("cashBalance") as string);
-  
+
   // TQQQ inputs
   const tqqqPrice = parseFloat(formData.get("tqqqPrice") as string);
   const qqqPrice = parseFloat(formData.get("qqqPrice") as string);
   const qqq200Ma = parseFloat(formData.get("qqq200Ma") as string);
-  
+
   // UPRO inputs
   const uproPrice = parseFloat(formData.get("uproPrice") as string);
   const vooPrice = parseFloat(formData.get("vooPrice") as string);
   const voo200Ma = parseFloat(formData.get("voo200Ma") as string);
 
   // Validate inputs
-  const allInputs = [cashBalance, tqqqPrice, qqqPrice, qqq200Ma, uproPrice, vooPrice, voo200Ma];
-  
-  if (allInputs.some(val => isNaN(val))) {
-    resultDiv.innerHTML = "<p>Error: Please enter valid numbers in all fields</p>";
+  const allInputs = [
+    cashBalance,
+    tqqqPrice,
+    qqqPrice,
+    qqq200Ma,
+    uproPrice,
+    vooPrice,
+    voo200Ma,
+  ];
+
+  if (allInputs.some((val) => isNaN(val))) {
+    resultDiv.innerHTML =
+      "<p>Error: Please enter valid numbers in all fields</p>";
     return false;
   }
 
-  if (allInputs.some(val => val <= 0)) {
+  if (allInputs.some((val) => val <= 0)) {
     resultDiv.innerHTML = "<p>Error: All values must be greater than zero</p>";
     return false;
   }
@@ -101,10 +110,14 @@ form.addEventListener("submit", (e: Event) => {
   resultDiv.innerHTML = `
     <h2>Results</h2>
     <p><strong>Cash Balance:</strong> $${cashBalance.toFixed(2)}</p>
-    <p><strong>Portfolio Scale Factor:</strong> ${tqqqResult.portfolioScaleFactor}x</p>
+    <p><strong>Portfolio Scale Factor:</strong> ${
+      tqqqResult.portfolioScaleFactor
+    }x</p>
     
     <h3>TQQQ Investment</h3>
-    <p><strong>Recommended Investment Amount:</strong> $${tqqqResult.finalInvestment.toFixed(2)}</p>
+    <p><strong>Recommended Investment Amount:</strong> $${tqqqResult.finalInvestment.toFixed(
+      2
+    )}</p>
     <p><strong>QQQ Distance from 200MA:</strong> ${tqqqDistancePercent}%</p>
     <p><strong>Market Position:</strong> ${
       tqqqResult.distance > 0
@@ -113,7 +126,9 @@ form.addEventListener("submit", (e: Event) => {
     }</p>
     
     <h3>UPRO Investment</h3>
-    <p><strong>Recommended Investment Amount:</strong> $${uproResult.finalInvestment.toFixed(2)}</p>
+    <p><strong>Recommended Investment Amount:</strong> $${uproResult.finalInvestment.toFixed(
+      2
+    )}</p>
     <p><strong>VOO Distance from 200MA:</strong> ${uproDistancePercent}%</p>
     <p><strong>Market Position:</strong> ${
       uproResult.distance > 0

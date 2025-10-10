@@ -17,6 +17,7 @@ async function main() {
       choices: [
         { title: "TQQQ Investment", value: "tqqq-investment" },
         { title: "UPRO Investment", value: "upro-investment" },
+        { title: "Both (TQQQ and UPRO)", value: "both" },
       ],
       initial: 0,
     });
@@ -26,45 +27,45 @@ async function main() {
       process.exit(0);
     }
 
-    let assetPrice = 0;
-    if (typeResponse.investmentType === "tqqq-investment") {
-      const tqqqPriceResponse = await prompts({
-        type: "text",
-        name: "tqqqPrice",
-        message: "Enter the TQQQ price:",
-        initial: "0",
-        validate: (value) => {
-          const num = parseFloat(value);
-          if (isNaN(num)) return "Please enter a valid number";
-          if (num <= 0) return "TQQQ price must be greater than 0";
-          return true;
-        },
+    let tqqqAmount = 0;
+    let uproAmount = 0;
+
+    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
+      const tqqqAmountResponse = await prompts({
+        type: "select",
+        name: "tqqqAmount",
+        message: "Select TQQQ amount:",
+        choices: [
+          { title: "1000 (below 100 and 200 MA)", value: 1000 },
+          { title: "130 (above 100 and 200 MA)", value: 130 },
+        ],
+        initial: 0,
       });
 
-      if (!tqqqPriceResponse.tqqqPrice) {
+      if (tqqqAmountResponse.tqqqAmount === undefined) {
         console.log("\nCalculation cancelled.");
         process.exit(0);
       }
-      assetPrice = parseFloat(tqqqPriceResponse.tqqqPrice);
-    } else {
-      const uproPriceResponse = await prompts({
-        type: "text",
-        name: "uproPrice",
-        message: "Enter the UPRO price:",
-        initial: "0",
-        validate: (value) => {
-          const num = parseFloat(value);
-          if (isNaN(num)) return "Please enter a valid number";
-          if (num <= 0) return "UPRO price must be greater than 0";
-          return true;
-        },
+      tqqqAmount = tqqqAmountResponse.tqqqAmount;
+    }
+
+    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
+      const uproAmountResponse = await prompts({
+        type: "select",
+        name: "uproAmount",
+        message: "Select UPRO amount:",
+        choices: [
+          { title: "750 (below 100 and 200 MA)", value: 750 },
+          { title: "70 (above 100 and 200 MA)", value: 70 },
+        ],
+        initial: 0,
       });
 
-      if (!uproPriceResponse.uproPrice) {
+      if (uproAmountResponse.uproAmount === undefined) {
         console.log("\nCalculation cancelled.");
         process.exit(0);
       }
-      assetPrice = parseFloat(uproPriceResponse.uproPrice);
+      uproAmount = uproAmountResponse.uproAmount;
     }
 
     const cashBalanceResponse = await prompts({
@@ -85,9 +86,12 @@ async function main() {
       process.exit(0);
     }
 
-    let underlyingAssetPrice = 0;
-    let underlyingAsset200MaPrice = 0;
-    if (typeResponse.investmentType === "tqqq-investment") {
+    let qqqPrice = 0;
+    let qqq200Ma = 0;
+    let vooPrice = 0;
+    let voo200Ma = 0;
+
+    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
       const qqqPriceResponse = await prompts({
         type: "text",
         name: "qqqPrice",
@@ -123,9 +127,11 @@ async function main() {
         console.log("\nCalculation cancelled.");
         process.exit(0);
       }
-      underlyingAssetPrice = parseFloat(qqqPriceResponse.qqqPrice);
-      underlyingAsset200MaPrice = parseFloat(qqq200MaPrice.qqq200MaPrice);
-    } else {
+      qqqPrice = parseFloat(qqqPriceResponse.qqqPrice);
+      qqq200Ma = parseFloat(qqq200MaPrice.qqq200MaPrice);
+    }
+
+    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
       const vooPriceResponse = await prompts({
         type: "text",
         name: "vooPrice",
@@ -161,21 +167,40 @@ async function main() {
         console.log("\nCalculation cancelled.");
         process.exit(0);
       }
-      underlyingAssetPrice = parseFloat(vooPriceResponse.vooPrice);
-      underlyingAsset200MaPrice = parseFloat(voo200MaPrice.voo200MaPrice);
+      vooPrice = parseFloat(vooPriceResponse.vooPrice);
+      voo200Ma = parseFloat(voo200MaPrice.voo200MaPrice);
     }
 
-    // Perform calculation
-    const result = calculate({
-      type: typeResponse.investmentType,
-      cashBalance: parseFloat(cashBalanceResponse.cashBalance),
-      assetPrice,
-      underlyingAssetPrice,
-      underlyingAsset200MaPrice,
-    });
+    const cashBalance = parseFloat(cashBalanceResponse.cashBalance);
 
-    // Display result
-    console.log(formatResult(result));
+    // Perform calculations
+    console.log("\n=== Results ===");
+    console.log(`Cash Balance: $${cashBalance.toFixed(2)}`);
+    console.log(`Portfolio Scale Factor: ${Math.max(1, Math.floor(cashBalance / 1_500))}x\n`);
+
+    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
+      const tqqqResult = calculate({
+        type: "tqqq-investment",
+        cashBalance,
+        assetPrice: tqqqAmount,
+        underlyingAssetPrice: qqqPrice,
+        underlyingAsset200MaPrice: qqq200Ma,
+      });
+      console.log(formatResult(tqqqResult));
+      console.log(`TQQQ Amount Used: $${tqqqAmount}\n`);
+    }
+
+    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
+      const uproResult = calculate({
+        type: "upro-investment",
+        cashBalance,
+        assetPrice: uproAmount,
+        underlyingAssetPrice: vooPrice,
+        underlyingAsset200MaPrice: voo200Ma,
+      });
+      console.log(formatResult(uproResult));
+      console.log(`UPRO Amount Used: $${uproAmount}\n`);
+    }
   } catch (error) {
     if (error instanceof Error) {
       console.error("\nError:", error.message);

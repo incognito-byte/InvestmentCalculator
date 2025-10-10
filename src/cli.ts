@@ -30,14 +30,17 @@ async function main() {
     let tqqqAmount = 0;
     let uproAmount = 0;
 
-    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "tqqq-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const tqqqAmountResponse = await prompts({
         type: "select",
         name: "tqqqAmount",
         message: "Select TQQQ amount:",
         choices: [
-          { title: "1000 (below 100 and 200 MA)", value: 1000 },
           { title: "130 (above 100 and 200 MA)", value: 130 },
+          { title: "1000 (below 100 and 200 MA)", value: 1000 },
         ],
         initial: 0,
       });
@@ -49,7 +52,10 @@ async function main() {
       tqqqAmount = tqqqAmountResponse.tqqqAmount;
     }
 
-    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "upro-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const uproAmountResponse = await prompts({
         type: "select",
         name: "uproAmount",
@@ -91,7 +97,10 @@ async function main() {
     let vooPrice = 0;
     let voo200Ma = 0;
 
-    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "tqqq-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const qqqPriceResponse = await prompts({
         type: "text",
         name: "qqqPrice",
@@ -131,7 +140,10 @@ async function main() {
       qqq200Ma = parseFloat(qqq200MaPrice.qqq200MaPrice);
     }
 
-    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "upro-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const vooPriceResponse = await prompts({
         type: "text",
         name: "vooPrice",
@@ -176,9 +188,17 @@ async function main() {
     // Perform calculations
     console.log("\n=== Results ===");
     console.log(`Cash Balance: $${cashBalance.toFixed(2)}`);
-    console.log(`Portfolio Scale Factor: ${Math.max(1, Math.floor(cashBalance / 1_500))}x\n`);
+    console.log(
+      `Portfolio Scale Factor: ${Math.max(
+        1,
+        Math.floor(cashBalance / 1_500)
+      )}x\n`
+    );
 
-    if (typeResponse.investmentType === "tqqq-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "tqqq-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const tqqqResult = calculate({
         type: "tqqq-investment",
         cashBalance,
@@ -190,7 +210,10 @@ async function main() {
       console.log(`TQQQ Amount Used: $${tqqqAmount}\n`);
     }
 
-    if (typeResponse.investmentType === "upro-investment" || typeResponse.investmentType === "both") {
+    if (
+      typeResponse.investmentType === "upro-investment" ||
+      typeResponse.investmentType === "both"
+    ) {
       const uproResult = calculate({
         type: "upro-investment",
         cashBalance,

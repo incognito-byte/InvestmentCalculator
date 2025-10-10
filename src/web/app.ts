@@ -46,22 +46,22 @@ form.addEventListener("submit", (e: Event) => {
   const cashBalance = parseFloat(formData.get("cashBalance") as string);
 
   // TQQQ inputs
-  const tqqqPrice = parseFloat(formData.get("tqqqPrice") as string);
+  const tqqqAmount = parseFloat(formData.get("tqqqAmount") as string);
   const qqqPrice = parseFloat(formData.get("qqqPrice") as string);
   const qqq200Ma = parseFloat(formData.get("qqq200Ma") as string);
 
   // UPRO inputs
-  const uproPrice = parseFloat(formData.get("uproPrice") as string);
+  const uproAmount = parseFloat(formData.get("uproAmount") as string);
   const vooPrice = parseFloat(formData.get("vooPrice") as string);
   const voo200Ma = parseFloat(formData.get("voo200Ma") as string);
 
   // Validate inputs
   const allInputs = [
     cashBalance,
-    tqqqPrice,
+    tqqqAmount,
     qqqPrice,
     qqq200Ma,
-    uproPrice,
+    uproAmount,
     vooPrice,
     voo200Ma,
   ];
@@ -80,7 +80,7 @@ form.addEventListener("submit", (e: Event) => {
   // Calculate TQQQ
   const tqqqInput = {
     type: "tqqq-investment",
-    assetPrice: tqqqPrice,
+    assetPrice: tqqqAmount,
     cashBalance,
     underlyingAssetPrice: qqqPrice,
     underlyingAsset200MaPrice: qqq200Ma,
@@ -89,7 +89,7 @@ form.addEventListener("submit", (e: Event) => {
   // Calculate UPRO
   const uproInput = {
     type: "upro-investment",
-    assetPrice: uproPrice,
+    assetPrice: uproAmount,
     cashBalance,
     underlyingAssetPrice: vooPrice,
     underlyingAsset200MaPrice: voo200Ma,
@@ -115,6 +115,7 @@ form.addEventListener("submit", (e: Event) => {
     }x</p>
     
     <h3>TQQQ Investment</h3>
+    <p><strong>TQQQ Amount Used:</strong> $${tqqqAmount}</p>
     <p><strong>Recommended Investment Amount:</strong> $${tqqqResult.finalInvestment.toFixed(
       2
     )}</p>
@@ -126,6 +127,7 @@ form.addEventListener("submit", (e: Event) => {
     }</p>
     
     <h3>UPRO Investment</h3>
+    <p><strong>UPRO Amount Used:</strong> $${uproAmount}</p>
     <p><strong>Recommended Investment Amount:</strong> $${uproResult.finalInvestment.toFixed(
       2
     )}</p>

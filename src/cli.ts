@@ -39,7 +39,7 @@ async function main() {
         name: "tqqqAmount",
         message: "Select TQQQ amount:",
         choices: [
-          { title: "250 (above 100 and 200 MA)", value: 250 },
+          { title: "130 (above 100 and 200 MA)", value: 130 },
           { title: "1000 (below 100 and 200 MA)", value: 1000 },
         ],
         initial: 0,

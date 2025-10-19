@@ -14,10 +14,7 @@ export interface CalculationResult {
 }
 
 export function calculate(input: CalculationInput): CalculationResult {
-  const portfolioScaleFactor = Math.max(
-    1,
-    Math.floor(input.cashBalance / 1_500)
-  );
+  const portfolioScaleFactor = Math.max(1, Math.floor(input.cashBalance / 250));
 
   const distance =
     (input.underlyingAssetPrice - input.underlyingAsset200MaPrice) /

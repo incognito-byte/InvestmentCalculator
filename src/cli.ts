@@ -189,10 +189,7 @@ async function main() {
     console.log("\n=== Results ===");
     console.log(`Cash Balance: $${cashBalance.toFixed(2)}`);
     console.log(
-      `Portfolio Scale Factor: ${Math.max(
-        1,
-        Math.floor(cashBalance / 1_500)
-      )}x\n`
+      `Portfolio Scale Factor: ${Math.max(1, Math.floor(cashBalance / 250))}x\n`
     );
 
     if (

@@ -39,7 +39,7 @@ async function main() {
         name: "tqqqAmount",
         message: "Select TQQQ amount:",
         choices: [
-          { title: "130 (above 100 and 200 MA)", value: 130 },
+          { title: "225 (above 100 and 200 MA)", value: 225 },
           { title: "1000 (below 100 and 200 MA)", value: 1000 },
         ],
         initial: 0,
@@ -62,7 +62,7 @@ async function main() {
         message: "Select UPRO amount:",
         choices: [
           { title: "750 (below 100 and 200 MA)", value: 750 },
-          { title: "70 (above 100 and 200 MA)", value: 70 },
+          { title: "25 (above 100 and 200 MA)", value: 25 },
         ],
         initial: 0,
       });

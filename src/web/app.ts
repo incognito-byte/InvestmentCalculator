@@ -140,3 +140,61 @@ form.addEventListener("submit", (e: Event) => {
 
   return false;
 });
+
+// Tax Bracket Calculator
+const taxCalculateButton = document.getElementById("taxCalculateButton") as HTMLButtonElement;
+const taxResultDiv = document.getElementById("taxResult") as HTMLDivElement;
+const taxBracketSelect = document.getElementById("taxBracket") as HTMLSelectElement;
+const ytdEarningsInput = document.getElementById("ytdEarnings") as HTMLInputElement;
+const stockPriceInput = document.getElementById("stockPrice") as HTMLInputElement;
+
+taxCalculateButton.addEventListener("click", () => {
+  const taxBracketValue = parseFloat(taxBracketSelect.value);
+  const ytdEarnings = parseFloat(ytdEarningsInput.value);
+  const stockPrice = parseFloat(stockPriceInput.value);
+
+  // Validate inputs
+  if (isNaN(taxBracketValue) || isNaN(ytdEarnings) || isNaN(stockPrice)) {
+    taxResultDiv.innerHTML = "<p>Error: Please enter valid numbers</p>";
+    return;
+  }
+
+  if (stockPrice <= 0) {
+    taxResultDiv.innerHTML = "<p>Error: Stock Price must be greater than zero</p>";
+    return;
+  }
+
+  // Handle negative YTD earnings
+  if (ytdEarnings <= 0) {
+    taxResultDiv.innerHTML = `<p><strong>Sell anything that is positive</strong></p>`;
+    return;
+  }
+
+  // Calculate: YTD / (1 - tax_bracket_value)
+  const breakevenPoint = ytdEarnings / (1 - taxBracketValue);
+  const breakevenPercent = breakevenPoint.toFixed(2);
+
+  // Calculate buffer points
+  const greedy5Percent = (breakevenPoint * 1.05).toFixed(2);
+  const mild10Percent = (breakevenPoint * 1.10).toFixed(2);
+  const conservative15Percent = (breakevenPoint * 1.15).toFixed(2);
+
+  // Calculate sell prices
+  const greedy5Price = (stockPrice * (1 - (parseFloat(greedy5Percent) / 100))).toFixed(2);
+  const mild10Price = (stockPrice * (1 - (parseFloat(mild10Percent) / 100))).toFixed(2);
+  const conservative15Price = (stockPrice * (1 - (parseFloat(conservative15Percent) / 100))).toFixed(2);
+  const breakevenPrice = (stockPrice * (1 - (parseFloat(breakevenPercent) / 100))).toFixed(2);
+
+  taxResultDiv.innerHTML = `
+    <p><strong>Breakeven Point:</strong> Sell anything above ${breakevenPercent}%</p>
+    <p><strong>Greedy (5% buffer):</strong> Sell anything above ${greedy5Percent}%</p>
+    <p><strong>Mild (10% buffer):</strong> Sell anything above ${mild10Percent}%</p>
+    <p><strong>Conservative (15% buffer):</strong> Sell anything above ${conservative15Percent}%</p>
+    <hr style="margin: 15px 0;" />
+    <h3>Sell Prices</h3>
+    <p><strong>Breakeven Price:</strong> $${breakevenPrice}</p>
+    <p><strong>Greedy Price:</strong> $${greedy5Price}</p>
+    <p><strong>Mild Price:</strong> $${mild10Price}</p>
+    <p><strong>Conservative Price:</strong> $${conservative15Price}</p>
+  `;
+});

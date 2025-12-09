@@ -57,6 +57,35 @@
 
     <div id="result"></div>
 
+    <hr style="margin: 40px 0;" />
+
+    <h1>Tax Bracket Calculator</h1>
+
+    <div id="taxCalculatorSection">
+      <div>
+        <label for="taxBracket">Tax Bracket:</label>
+        <select id="taxBracket" name="taxBracket" required>
+          <option value="0.32">$191,950–$243,725 (32%)</option>
+        </select>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <label for="ytdEarnings">YTD Earnings:</label>
+        <input type="text" id="ytdEarnings" name="ytdEarnings" required />
+      </div>
+
+      <div style="margin-top: 15px;">
+        <label for="stockPrice">Stock Price:</label>
+        <input type="text" id="stockPrice" name="stockPrice" required />
+      </div>
+
+      <div style="margin-top: 15px;">
+        <button type="button" id="taxCalculateButton">Calculate</button>
+      </div>
+
+      <div id="taxResult" style="margin-top: 15px;"></div>
+    </div>
+
     <script src="./app.js"></script>
   </body>
 </html>
